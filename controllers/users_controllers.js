@@ -1,5 +1,6 @@
 const User = require("../models/user.models");
-const getUsers = async (req, res) => {
+
+ exports.getUsers = async (req, res) => {
   const { user } = req.user;
   const isUser = await User.findOne({ _id : user._id });
   if(!isUser){
@@ -15,5 +16,3 @@ const getUsers = async (req, res) => {
     message: "",
   });
 };
-
-module.exports = { getUsers };

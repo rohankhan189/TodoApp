@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middlewares/Auth_middleware');
-const { addNote, EditNote, GetNotes, DeleteNote,EditPinnedNote } = require('../controllers/notes_controllers');
+const { addNote, EditNote, GetNotes, DeleteNote,EditPinnedNote,SearchNotes } = require('../controllers/notes_controllers');
 
 // Add note route
 router.post('/add-note', authenticateToken, addNote);
@@ -17,5 +17,8 @@ router.delete('/delete-note/:noteId', authenticateToken, DeleteNote);
 
 //edit Pinned note route
 router.put('/update-note-pinned/:noteId', authenticateToken, EditPinnedNote);
+
+//Search note route
+router.get('/search-notes', authenticateToken,SearchNotes );
 
 module.exports = router;

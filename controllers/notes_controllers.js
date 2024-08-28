@@ -1,7 +1,6 @@
 const Notes = require("../models/notes_model");
 
 // Add Note API
-
 exports.addNote = async (req, res) => {
   const { title, content, tags } = req.body;
   const user = await req.user;
@@ -152,7 +151,6 @@ exports.DeleteNote = async (req, res) => {
 };
 
 // Get All Note API
-
 exports.GetNotes = async (req, res) => {
   const {user} = req.user;
   try {
@@ -173,6 +171,39 @@ exports.GetNotes = async (req, res) => {
       error: false,
       notes,
       message: "all Notes retrieved Successfully...",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+
+// Search Notes  API
+exports.SearchNotes = async (req, res) => {
+  const user = req.user;
+  const {query} = req.query
+
+
+  if (!query){
+    return res.status(400).json({
+      error: true, message: "Search query is required"
+    });
+  }
+  try {
+    const matchNote = await Notes.findOne({
+      userId: user.user._id,
+      $or: [
+        {title: {$regex: new RegExp(query, "i")}},
+        {content: {$regex: new RegExp(query, "i")}},
+      ]
+    });
+    return res.json({
+      error: false,
+      notes: matchNote,
+      message: "Notes Matching the search query retrieved Successfully...",
     });
   } catch (error) {
     return res.status(500).json({

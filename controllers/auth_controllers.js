@@ -1,7 +1,7 @@
 const User = require("../models/user.models");
 const jwt = require("jsonwebtoken");
 
-const register = async (req, res) => {
+exports.register = async (req, res) => {
   const { fullName, email, password } = req.body;
 
   if (!fullName || !email || !password) {
@@ -18,10 +18,10 @@ const register = async (req, res) => {
       message: "User Already Exist",
     });
   }
-
-  const user = new User({ fullName, email, password });
-  await user.save();
-
+  else{
+    var user = new User({ fullName, email, password });
+    await user.save();
+  }
   const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "30000m",
   });
@@ -34,7 +34,7 @@ const register = async (req, res) => {
   });
 };
 
-const login = async (req, res) => {
+exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -63,5 +63,3 @@ const login = async (req, res) => {
     accessToken,
   });
 };
-
-module.exports = { register, login };
