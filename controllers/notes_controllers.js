@@ -184,27 +184,28 @@ exports.GetNotes = async (req, res) => {
 // Search Notes  API
 exports.SearchNotes = async (req, res) => {
   const user = req.user;
-  const {query} = req.query
+  const { query } = req.query;
 
-
-  if (!query){
-    return res.status(400).json({
-      error: true, message: "Search query is required"
-    });
-  }
   try {
-    const matchNote = await Notes.findOne({
-      userId: user.user._id,
-      $or: [
-        {title: {$regex: new RegExp(query, "i")}},
-        {content: {$regex: new RegExp(query, "i")}},
-      ]
-    });
+    let notes;
+    if (!query || query.trim() === "") {
+      notes = await Notes.find({ userId: user.user._id });
+    } else {
+      notes = await Notes.find({
+        userId: user.user._id,
+        $or: [
+          { title: { $regex: new RegExp(query, "i") } },
+          { content: { $regex: new RegExp(query, "i") } },
+        ]
+      });
+    }
+
     return res.json({
       error: false,
-      notes: matchNote,
-      message: "Notes Matching the search query retrieved Successfully...",
+      notes: notes,
+      message: "Notes retrieved successfully.",
     });
+
   } catch (error) {
     return res.status(500).json({
       error: true,
@@ -212,3 +213,4 @@ exports.SearchNotes = async (req, res) => {
     });
   }
 };
+

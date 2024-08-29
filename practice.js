@@ -2,19 +2,14 @@ console.log("Starting the server...");
 
 require("./config/connection");
 const express = require("express");
-
 const cors = require("cors");
 
 const authRoutes = require("./routes/auth_routes");
 const notesRoutes = require("./routes/notes_routes");
 const usersRoutes = require("./routes/users_routes");
-const bodyParser = require("body-parser");
 
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}))
+app.use(express.json());
 app.use(cors({ origin: "*" }));
 
 app.use("/auth", authRoutes);
